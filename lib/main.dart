@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
     final pathDB = await getDatabasesPath();
     final dbLocale = join(pathDB, "nameDatabase.db");
 
-    var retorno = await openDatabase(
+    var bd = await openDatabase(
       dbLocale,
       version: 1,
       onCreate: (db, dbRecentVersion) {
@@ -28,12 +28,23 @@ class _HomeState extends State<Home> {
       },
     );
 
-    print("aberto: " + retorno.isOpen.toString());
+    return bd;
+  }
+
+  _salvar() async {
+    Database bd = await _recuperarBancoDeDados();
+
+    Map<String, dynamic> dadosUsuario = {"name": "João", "age": 20};
+
+    int id = await bd.insert("tb_users", dadosUsuario); // quando ele insere retorna o ID
+
+    print("Salvo: $id");
   }
 
   @override
   Widget build(BuildContext context) {
     _recuperarBancoDeDados();
+    _salvar();
 
     return const Placeholder();
   }

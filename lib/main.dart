@@ -53,9 +53,32 @@ class _HomeState extends State<Home> {
     }
   }
 
+  _recuperarUsuarioPorId(int id) async {
+    Database bd = await _recuperarBancoDeDados();
+
+    List usuarios = await bd.query(
+      "tb_users",
+      columns: ["id", "name", "age"],
+      where: "id = ? AND name = ?",
+      whereArgs: [id, "Grazi"],
+    );
+
+    for (var usuario in usuarios) {
+      print("ID: ${usuario["id"]} Nome: ${usuario["name"]} Idade: ${usuario["age"]}");
+    }
+  }
+
+  _excluirUsuario(int id) async {
+    Database bd = await _recuperarBancoDeDados();
+
+    bd.delete("tb_users", where: "id = ?", whereArgs: [id]);
+  }
+
   @override
   Widget build(BuildContext context) {
     _listarUsuarios();
+    // _recuperarUsuarioPorId(4);
+    // _excluirUsuario(3);
 
     return const Placeholder();
   }
